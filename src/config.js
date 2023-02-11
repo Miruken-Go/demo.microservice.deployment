@@ -1,14 +1,22 @@
 const env = process.env.env
 if (!env) throw "Environment variable required: [env]"
 
-const appName = 'teamsrv'
+const appName  = 'teamsrv'
+const instance = process.env.instance
+const prefix   = (instance) 
+    ? `${appName}-${env}-${instance}`
+    : `${appName}-${env}`
 
 const config = {
+    workingDirectory: process.cwd(),
+    nodeDirectory:    __dirname,
+    env,
+    instance,
     appName,
-    env:                        env,
-    resourceGroup:              `${appName}-${env}-rg`,
-    location:                   process.env.location || 'CentralUs',
-    secrets:                    {},
+    prefix,
+    resourceGroup: `${prefix}-rg`,
+    location:      process.env.location || 'CentralUs',
+    secrets:       {},
 
     requiredSecrets: function (names) {
         names.forEach(function(name) {
@@ -36,6 +44,7 @@ config.requiredSecrets([
 
 config.requiredNonSecrets([
     'tenantId',
+    'subscriptionId',
     'deploymentPipelineClientId'
 ])
 

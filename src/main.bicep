@@ -19,12 +19,6 @@ resource conainterAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01'
     name: 'Consumption'
   }
   properties: {
-    // appLogsConfiguration: {
-    //   destination: 'log-analytics'
-    //   logAnalyticsConfiguration: {
-    //     customerId: 'cbf4e59f-cf78-4946-bb55-2421904cafa1'
-    //   }
-    // }
     zoneRedundant: false
     customDomainConfiguration: {}
   }

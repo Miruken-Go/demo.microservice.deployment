@@ -8,6 +8,7 @@ async function main() {
         console.log("Configuring Environment")
         logging.printConfiguration(config)
         await az.login()
+        await az.registerForActiveDirectoryIfNeeded()
         await arm.configure()
         console.log("Configuration Succeded")
     } catch (error) {

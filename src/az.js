@@ -7,6 +7,7 @@ async function login() {
     await bash.execute(`az login --service-principal --username ${config.deploymentPipelineClientId} --password ${config.secrets.deploymentPipelineClientSecret} --tenant ${config.tenantId}`);
 }
 
+//https://learn.microsoft.com/en-us/azure/azure-resource-manager/troubleshooting/error-register-resource-provider?tabs=azure-cli
 async function registerForActiveDirectoryIfNeeded() {
     header('Checking Active Directory Provider Registration')
     const providers = await bash.json(`az provider list --query "[?namespace=='Microsoft.AzureActiveDirectory']" --output json`)

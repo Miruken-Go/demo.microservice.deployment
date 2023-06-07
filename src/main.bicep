@@ -2,6 +2,7 @@
 //param env     string
 param prefix       string
 param simplePrefix string
+param appName      string
 param location     string 
 
 // var subscriptionId = subscription().subscriptionId
@@ -13,31 +14,31 @@ param location     string
 // Azure Monitor
 /////////////////////////////////////////////////////////////////////////////////////
 
-resource logAnalyticsWorkspace'microsoft.operationalinsights/workspaces@2021-06-01' = {
-  name: '${prefix}-log-analytics-workspace'
-  location: location
-  properties: {
-    sku: {
-      name: 'PerGB2018'
-    }
-    retentionInDays: 30
-    features: {
-      enableLogAccessUsingOnlyResourcePermissions: true
-    }
-  }
-}
+// resource logAnalyticsWorkspace'microsoft.operationalinsights/workspaces@2021-06-01' = {
+//   name: '${prefix}-log-analytics-workspace'
+//   location: location
+//   properties: {
+//     sku: {
+//       name: 'PerGB2018'
+//     }
+//     retentionInDays: 30
+//     features: {
+//       enableLogAccessUsingOnlyResourcePermissions: true
+//     }
+//   }
+// }
 
 /////////////////////////////////////////////////////////////////////////////////////
 // Container Apps Environment
 /////////////////////////////////////////////////////////////////////////////////////
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
-  name: '${simplePrefix}CR'
+  name: simplePrefix
   location: location
   sku: {
     name: 'Basic'
   }
   properties: {
-    adminUserEnabled: false
+    adminUserEnabled: true
   }
 }
 
@@ -57,7 +58,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01'
 }
 
 resource containerApp 'Microsoft.App/containerApps@2022-03-01' ={
-  name: simplePrefix 
+  name: appName 
   location: location
   properties:{
     managedEnvironmentId: containerAppsEnvironment.id

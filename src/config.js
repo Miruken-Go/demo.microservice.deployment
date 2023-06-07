@@ -7,10 +7,10 @@ const prefix   = (instance)
     ? `${appName}-${env}-${instance}`
     : `${appName}-${env}`
 
-const simplePrefix = prefix.replace(/[^A-Za-z0-9]/g, "")
+const simplePrefix = prefix.replace(/[^A-Za-z0-9]/g, "").toLowerCase()
 
-if (simplePrefix.length > 30)
-    throw `Configuration Error - simplePrefix cannot be longer than 30 characters because of ACR, and ACA naming restrictions: ${simplePrefix}`
+if (simplePrefix.length > 32)
+    throw `Configuration Error - simplePrefix cannot be longer than 32 characters because of ACR, and ACA naming restrictions: ${simplePrefix}`
 
 const config = {
     workingDirectory: process.cwd(),

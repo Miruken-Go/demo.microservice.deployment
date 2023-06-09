@@ -8,10 +8,10 @@ const prefix   = (instance)
     : `${appName}-${env}`
 
 const simplePrefix = prefix.replace(/[^A-Za-z0-9]/g, "").toLowerCase()
-const containerRepository = `${appName}shared`.replace(/[^A-Za-z0-9]/g, "").toLowerCase()
+const containerRepositoryName = `${appName}shared`.replace(/[^A-Za-z0-9]/g, "").toLowerCase()
 
-if (containerRepository.length > 32)
-    throw `Configuration Error - containerRepository name cannot be longer than 32 characters : ${containerRepository} [${containerRepository.length}]`
+if (containerRepositoryName.length > 32)
+    throw `Configuration Error - containerRepositoryName cannot be longer than 32 characters : ${containerRepositoryName} [${containerRepositoryName.length}]`
 
 if (simplePrefix.length > 32)
     throw `Configuration Error - simplePrefix cannot be longer than 50 characters because of ACA naming restrictions: ${simplePrefix} [${simplePrefix.length}]`
@@ -26,7 +26,7 @@ const config = {
     simplePrefix,
     resourceGroup: `${prefix}-rg`,
     sharedResourceGroup: `${appName}-shared-rg`,
-    containerRepository,
+    containerRepositoryName,
     location:      process.env.location || 'CentralUs',
     secrets:       {},
 

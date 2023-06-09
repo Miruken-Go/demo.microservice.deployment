@@ -1,12 +1,10 @@
-@description('Standard envs are dev, qa, prod')
-param prefix               string
-param appName              string
-param location             string 
+param prefix                      string
+param appName                     string
+param location                    string 
+param containerRepositoryName     string 
+@secure()
+param containerRepositoryPassword string 
 
-// var subscriptionId = subscription().subscriptionId
-// var tenantId       = subscription().tenantId
-// var useDevSetting  = contains(env, 'dev')
-// var useProdSetting = contains(env, 'prod')
 
 /////////////////////////////////////////////////////////////////////////////////////
 // Azure Monitor
@@ -24,14 +22,6 @@ param location             string
 //       enableLogAccessUsingOnlyResourcePermissions: true
 //     }
 //   }
-// }
-
-/////////////////////////////////////////////////////////////////////////////////////
-// Container Apps Environment
-/////////////////////////////////////////////////////////////////////////////////////
-// resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
-//   name: containerRepository
-//   scope: resourceGroup(sharedResourceGroup)
 // }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -63,10 +53,17 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' ={
         targetPort: 80
         external: true
       }
+      secrets: [
+        {
+          name: 'acr-password'
+          value: containerRepositoryPassword
+        }
+      ]
       registries: [
         {
-          identity: 'system'
-          server:   'teamsrvshared.azurecr.io'
+          passwordSecretRef: 'acr-password'
+          username: containerRepositoryName
+          server: '${containerRepositoryName}.azurecr.io'
         }
       ]
     }
@@ -80,20 +77,6 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' ={
     }
   }
 }
-
-// resource acrPullRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
-//   scope: subscription()
-//   name: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
-// }
-
-// resource containerApp_ACR_role 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
-//   name:  guid(containerApp.id, containerRegistry.id)
-//   properties: {
-//     roleDefinitionId: acrPullRoleDefinition.id 
-//     description:      'Container Registry AcrPull'
-//     principalId:      containerApp.identity.principalId
-//   }
-// }
 
 output containerAppPrincipalId string = containerApp.identity.principalId
 

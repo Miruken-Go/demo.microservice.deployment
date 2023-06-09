@@ -1,8 +1,8 @@
-param containerRepository string
+param containerRepositoryName string
 param location            string 
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
-  name:     containerRepository
+  name:     containerRepositoryName
   location: location
   sku: {
     name: 'Basic'
@@ -11,5 +11,3 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-pr
     adminUserEnabled: true
   }
 }
-
-output containerRegistryUrl string = containerRegistry.properties.loginServer

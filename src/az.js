@@ -36,10 +36,19 @@ async function registerAzureProvider(providerName) {
     }
 }
 
+async function getAzureContainerRepositoryPassword(name) {
+    const result = await bash.json(`az acr credential show --name ${name} --subscription ${config.subscriptionId}`, true)
+    if (!result.passwords.length)
+        throw new `Expected passwords from the Azure Container Registry: ${name}`
+
+    return result.passwords[0].value
+}
+
 module.exports = {
     login,
     createResourceGroup,
     registerActiveDirectoryProvider, 
     registerAppProvider,
-    registerOperationalInsightsProvider 
+    registerOperationalInsightsProvider,
+    getAzureContainerRepositoryPassword
 }

@@ -9,26 +9,26 @@ async function main() {
         logging.printConfiguration(config)
         await az.login()
 
-        // await az.registerActiveDirectoryProvider()
-        // await az.registerAppProvider()
-        // await az.registerOperationalInsightsProvider()
+        await az.registerActiveDirectoryProvider()
+        await az.registerAppProvider()
+        await az.registerOperationalInsightsProvider()
 
         //Shared resources 
-        // await az.createResourceGroup(config.sharedResourceGroup)
-        // const sharedResources = await arm.deploySharedResources()
-        // const containerRegistryUrl = sharedResources.properties.outputs.containerRegistryUrl.value
-        // console.log(`containerRegistryUrl: ${containerRegistryUrl}`)
+        await az.createResourceGroup(config.sharedResourceGroup)
+        await arm.deploySharedResources()
 
         //Environment resources
         await az.createResourceGroup(config.resourceGroup)
-        const environmentResources =  await arm.deployEnvironmentResources()
+
+        const getAzureContainerRepositoryPassword = await az.getAzureContainerRepositoryPassword(config.containerRepositoryName)
+        const environmentResources =  await arm.deployEnvironmentResources(getAzureContainerRepositoryPassword)
         const containerAppPrincipalId = environmentResources.properties.outputs.containerAppPrincipalId.value
         console.log(`containerAppPrincipalId: ${containerAppPrincipalId}`)
 
         //Role definitions
-        await arm.deployRolesResources(containerAppPrincipalId)
+        //await arm.deployRolesResources(containerAppPrincipalId)
 
-        // console.log("Configuration Succeded")
+        console.log("Configuration Succeded")
     } catch (error) {
         process.exitCode = 1
         console.log(error)

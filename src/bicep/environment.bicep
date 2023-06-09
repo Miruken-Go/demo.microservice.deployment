@@ -63,6 +63,12 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' ={
         targetPort: 80
         external: true
       }
+      registries: [
+        {
+          identity: 'system'
+          server:   'teamsrvshared.azurecr.io'
+        }
+      ]
     }
     template: {
       containers: [

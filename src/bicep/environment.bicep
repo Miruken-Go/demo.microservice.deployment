@@ -1,9 +1,7 @@
 @description('Standard envs are dev, qa, prod')
-//param env     string
-param prefix       string
-param simplePrefix string
-param appName      string
-param location     string 
+param prefix               string
+param appName              string
+param location             string 
 
 // var subscriptionId = subscription().subscriptionId
 // var tenantId       = subscription().tenantId
@@ -31,16 +29,10 @@ param location     string
 /////////////////////////////////////////////////////////////////////////////////////
 // Container Apps Environment
 /////////////////////////////////////////////////////////////////////////////////////
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
-  name: simplePrefix
-  location: location
-  sku: {
-    name: 'Basic'
-  }
-  properties: {
-    adminUserEnabled: true
-  }
-}
+// resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+//   name: containerRepository
+//   scope: resourceGroup(sharedResourceGroup)
+// }
 
 /////////////////////////////////////////////////////////////////////////////////////
 // Container Apps
@@ -60,9 +52,13 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01'
 resource containerApp 'Microsoft.App/containerApps@2022-03-01' ={
   name: appName 
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties:{
     managedEnvironmentId: containerAppsEnvironment.id
     configuration: {
+      activeRevisionsMode: 'Multiple'
       ingress: {
         targetPort: 80
         external: true
@@ -71,10 +67,27 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' ={
     template: {
       containers: [
         {
-          image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
-          name: 'simple-hello-world-container'
+          image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest' 
+          name:  'simple-hello-world-container'
         }
       ]
     }
   }
 }
+
+// resource acrPullRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
+//   scope: subscription()
+//   name: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+// }
+
+// resource containerApp_ACR_role 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+//   name:  guid(containerApp.id, containerRegistry.id)
+//   properties: {
+//     roleDefinitionId: acrPullRoleDefinition.id 
+//     description:      'Container Registry AcrPull'
+//     principalId:      containerApp.identity.principalId
+//   }
+// }
+
+output containerAppPrincipalId string = containerApp.identity.principalId
+

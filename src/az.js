@@ -7,20 +7,39 @@ async function login() {
     await bash.execute(`az login --service-principal --username ${config.deploymentPipelineClientId} --password ${config.secrets.deploymentPipelineClientSecret} --tenant ${config.tenantId}`);
 }
 
+async function createResourceGroup(name) {
+    await bash.execute(`az group create --location ${config.location} --name ${name} --subscription ${config.subscriptionId}`)
+}
+
 //https://learn.microsoft.com/en-us/azure/azure-resource-manager/troubleshooting/error-register-resource-provider?tabs=azure-cli
-async function registerForActiveDirectoryIfNeeded() {
-    header('Checking Active Directory Provider Registration')
-    const providers = await bash.json(`az provider list --query "[?namespace=='Microsoft.AzureActiveDirectory']" --output json`)
+async function registerActiveDirectoryProvider() {
+    registerAzureProvider('Microsoft.AzureActiveDirectory')
+}
+
+async function registerAppProvider() {
+    registerAzureProvider('Microsoft.App')
+}
+
+async function registerOperationalInsightsProvider() {
+    registerAzureProvider('Microsoft.AzureActiveDirectory')
+}
+
+async function registerAzureProvider(providerName) { 
+    header(`Checking ${providerName} Provider Registration`)
+    const providers = await bash.json(`az provider list --query "[?namespace=='${providerName}']" --output json`)
     if (providers.length) {
         const provider =  providers[0];
         if (provider.registrationState === "NotRegistered") {
-            header('Registering Active Directory Provider')
-            await bash.execute(`az provider register --namespace Microsoft.AzureActiveDirectory --wait`);
+            header(`Registering ${providerName} Provider`)
+            await bash.execute(`az provider register --namespace ${providerName} --wait`);
         }
     }
 }
 
 module.exports = {
     login,
-    registerForActiveDirectoryIfNeeded
+    createResourceGroup,
+    registerActiveDirectoryProvider, 
+    registerAppProvider,
+    registerOperationalInsightsProvider 
 }

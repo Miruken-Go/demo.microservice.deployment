@@ -1,16 +1,20 @@
 const env = process.env.env
 if (!env) throw "Environment variable required: [env]"
 
-const appName  = 'teamsrv'
+const appName  = 'teamsrv'.toLowerCase()
 const instance = process.env.instance
 const prefix   = (instance) 
     ? `${appName}-${env}-${instance}`
     : `${appName}-${env}`
 
 const simplePrefix = prefix.replace(/[^A-Za-z0-9]/g, "").toLowerCase()
+const containerRepository = `${appName}shared`.replace(/[^A-Za-z0-9]/g, "").toLowerCase()
+
+if (containerRepository.length > 32)
+    throw `Configuration Error - containerRepository name cannot be longer than 32 characters : ${containerRepository} [${containerRepository.length}]`
 
 if (simplePrefix.length > 32)
-    throw `Configuration Error - simplePrefix cannot be longer than 32 characters because of ACR, and ACA naming restrictions: ${simplePrefix}`
+    throw `Configuration Error - simplePrefix cannot be longer than 50 characters because of ACA naming restrictions: ${simplePrefix} [${simplePrefix.length}]`
 
 const config = {
     workingDirectory: process.cwd(),
@@ -21,6 +25,8 @@ const config = {
     prefix,
     simplePrefix,
     resourceGroup: `${prefix}-rg`,
+    sharedResourceGroup: `${appName}-shared-rg`,
+    containerRepository,
     location:      process.env.location || 'CentralUs',
     secrets:       {},
 

@@ -1,15 +1,31 @@
 const { header } = require('./logging')
 const path       = require('path')
-const bash       = require('./bash').execute
+const bash       = require('./bash')
 const config     = require('./config')
 
-async function configure(vespyUiClientId) {
-    header("Deploying Arm Template")
+async function deploySharedResources() {
+    header("Deploying Shared Arm Template")
 
-    const bicepFile = path.join(config.nodeDirectory, 'main.bicep')
+    const bicepFile = path.join(config.nodeDirectory, 'bicep/shared.bicep')
 
-    await bash(`az group create --location ${config.location} --name ${config.resourceGroup} --subscription ${config.subscriptionId}`)
-    await bash(`
+    return await bash.json(`
+        az deployment group create                                \
+            --template-file ${bicepFile}                          \
+            --subscription ${config.subscriptionId}               \
+            --resource-group ${config.sharedResourceGroup}        \
+            --mode complete                                       \
+            --parameters                                          \
+                containerRepository=${config.containerRepository} \
+                location=${config.location}                       \
+    `)
+}
+
+async function deployEnvironmentResources() {
+    header("Deploying EnvironmentArm Template")
+
+    const bicepFile = path.join(config.nodeDirectory, 'bicep/environment.bicep')
+
+    return await bash.json(`
         az deployment group create                   \
             --template-file ${bicepFile}             \
             --subscription ${config.subscriptionId}  \
@@ -17,12 +33,29 @@ async function configure(vespyUiClientId) {
             --mode complete                          \
             --parameters                             \
                 prefix=${config.prefix}              \
-                simplePrefix=${config.simplePrefix}  \
                 appName=${config.appName}            \
-                location=${config.location}
+                location=${config.location}          \
     `)
 }
 
+async function deployRolesResources(containerAppPrincipalId) {
+    header("Deploying Roles Template")
+
+    const bicepFile = path.join(config.nodeDirectory, 'bicep/roles.bicep')
+
+    return await bash.json(`
+        az deployment sub create                                   \
+            --template-file ${bicepFile}                           \
+            --location ${config.location}                          \
+            --subscription ${config.subscriptionId}                \
+            --parameters                                           \
+                containerAppPrincipalId=${containerAppPrincipalId} \
+    `)
+}
+
+
 module.exports = {
-    configure
+    deployEnvironmentResources,
+    deploySharedResources,
+    deployRolesResources
 }

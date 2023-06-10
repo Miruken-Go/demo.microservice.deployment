@@ -50,7 +50,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' ={
     configuration: {
       activeRevisionsMode: 'Multiple'
       ingress: {
-        targetPort: 80
+        targetPort: 8080
         external: true
       }
       secrets: [
@@ -70,13 +70,10 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' ={
     template: {
       containers: [
         {
-          image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest' 
-          name:  'simple-hello-world-container'
+          image: '${containerRepositoryName}.azurecr.io/${appName}:initial' 
+          name:  appName
         }
       ]
     }
   }
 }
-
-output containerAppPrincipalId string = containerApp.identity.principalId
-

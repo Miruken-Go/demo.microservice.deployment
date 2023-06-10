@@ -12,18 +12,6 @@ async function createResourceGroup(name) {
 }
 
 //https://learn.microsoft.com/en-us/azure/azure-resource-manager/troubleshooting/error-register-resource-provider?tabs=azure-cli
-async function registerActiveDirectoryProvider() {
-    registerAzureProvider('Microsoft.AzureActiveDirectory')
-}
-
-async function registerAppProvider() {
-    registerAzureProvider('Microsoft.App')
-}
-
-async function registerOperationalInsightsProvider() {
-    registerAzureProvider('Microsoft.AzureActiveDirectory')
-}
-
 async function registerAzureProvider(providerName) { 
     header(`Checking ${providerName} Provider Registration`)
     const providers = await bash.json(`az provider list --query "[?namespace=='${providerName}']" --output json`)
@@ -47,8 +35,6 @@ async function getAzureContainerRepositoryPassword(name) {
 module.exports = {
     login,
     createResourceGroup,
-    registerActiveDirectoryProvider, 
-    registerAppProvider,
-    registerOperationalInsightsProvider,
+    registerAzureProvider,
     getAzureContainerRepositoryPassword
 }

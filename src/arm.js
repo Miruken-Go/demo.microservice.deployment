@@ -21,7 +21,7 @@ async function deploySharedResources() {
 }
 
 async function deployEnvironmentResources(containerRepositoryPassword) {
-    header("Deploying EnvironmentArm Template")
+    header("Deploying Environment Arm Template")
 
     const bicepFile = path.join(config.nodeDirectory, 'bicep/environment.bicep')
 
@@ -40,24 +40,7 @@ async function deployEnvironmentResources(containerRepositoryPassword) {
     `)
 }
 
-async function deployRolesResources(containerAppPrincipalId) {
-    header("Deploying Roles Template")
-
-    const bicepFile = path.join(config.nodeDirectory, 'bicep/roles.bicep')
-
-    return await bash.json(`
-        az deployment sub create                                   \
-            --template-file ${bicepFile}                           \
-            --location ${config.location}                          \
-            --subscription ${config.subscriptionId}                \
-            --parameters                                           \
-                containerAppPrincipalId=${containerAppPrincipalId} \
-    `)
-}
-
-
 module.exports = {
     deployEnvironmentResources,
     deploySharedResources,
-    deployRolesResources
 }

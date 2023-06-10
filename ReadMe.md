@@ -1,6 +1,8 @@
 # demo.microservice.deployment
 
-## Manual Set up in your Azure subscription
+## Initial Workflow when starting the project
+
+### Manually create deployment permissions in Azure
 
 Create a service principal
 https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal
@@ -9,7 +11,26 @@ https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-se
     Name it DeploymentPipeline
     Certificates&Secrets > New Client Secret
 
-Give DeploymentPipeline permissions on your tenant
+Give DeploymentPipeline permissions
+
+    Subscriptions > Access control (IAM)
+    Add role assignement Owner
+
+### Run the "build-and-push-deployment-image" pipeline
+
+### Run the "deploy-shared-environment" pipeline
+
+### Push the initial image to the shared Azure Container Repository
+
+    TAG=initial
+    IMAGE_NAME="teamsrvshared.azurecr.io/teamsrv:$TAG"; echo $IMAGE_NAME
+    docker build --build-arg application_version=$TAG -t $IMAGE_NAME demo.microservice/teamsrv 
+    az acr login -n teamsrvshared
+    docker push $IMAGE_NAME
+
+### Run the "deploy-environment" pipeline
+
+
 
 ## To Develop Locally
 

@@ -30,5 +30,7 @@ jobs:
         env:                            ${{ inputs.env }}
         instance:                       ${{ inputs.instance }}
     steps:
-    - name: Display Operating System Info
-      run:  echo "Deploy $env $instance environment."
+    - name: secrets
+      run:  echo "Verify secrets are not logged $tenantId"
+    - name: deployEnvironment
+      run:  src/deployEnvironment.js 

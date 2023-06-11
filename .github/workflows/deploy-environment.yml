@@ -30,6 +30,8 @@ jobs:
         env:                            ${{ inputs.env }}
         instance:                       ${{ inputs.instance }}
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
     - name: pwd
       run:  pwd
     - name: ls

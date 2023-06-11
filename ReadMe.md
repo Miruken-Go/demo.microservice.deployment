@@ -16,7 +16,24 @@ Give DeploymentPipeline permissions
     Subscriptions > Access control (IAM)
     Add role assignement Owner
 
+### Add secrets and variables in github
+
+Settings > Security > Secrets and Variables > Actions
+
+Secrets
+
+* DEPLOYMENT_PIPELINE_CLIENT_SECRET
+    
+Variables
+
+* TENANT_ID
+* SUBSCRIPTION_ID
+* DEPLOYMENT_PIPELINE_CLIENT_ID
+
 ### Run the "build-and-push-deployment-image" pipeline
+
+Get the deployment tag from the container and update the 
+other pipeline files with the latest tag.
 
 ### Run the "deploy-shared-environment" pipeline
 
@@ -29,8 +46,6 @@ Give DeploymentPipeline permissions
     docker push $IMAGE_NAME
 
 ### Run the "deploy-environment" pipeline
-
-
 
 ## To Develop Locally
 

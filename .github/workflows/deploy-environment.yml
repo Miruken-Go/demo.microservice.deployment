@@ -23,9 +23,9 @@ jobs:
     container:
       image: ghcr.io/miruken-go/demo.microservice.deployment:1686001494
       env:
-        tenantId:                       ${{ variables.TENANT_ID }}
-        subscriptionId:                 ${{ variables.SUBSCRIPTION_ID }}
-        deploymentPipelineClientId:     ${{ variables.DEPLOYMENT_PIPELINE_CLIENT_ID }}
+        tenantId:                       ${{ vars.TENANT_ID }}
+        subscriptionId:                 ${{ vars.SUBSCRIPTION_ID }}
+        deploymentPipelineClientId:     ${{ vars.DEPLOYMENT_PIPELINE_CLIENT_ID }}
         deploymentPipelineClientSecret: ${{ secrets.DEPLOYMENT_PIPELINE_CLIENT_SECRET }}
         env:                            ${{ inputs.env }}
         instance:                       ${{ inputs.instance }}

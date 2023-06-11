@@ -1,0 +1,34 @@
+name: Deploy Environment 
+
+on: 
+  workflow_dispatch:
+    inputs:
+      env:
+        type: choice
+        description: Env
+        options: 
+        - dev 
+        - qa
+        - staging
+        - prod
+      instance:
+        description: 'Unique instance of an environment'
+        default: ''
+        required: false
+        type: string
+
+jobs:
+  containerized_job:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/miruken-go/demo.microservice.deployment:1686001494
+      env:
+        tenantId:                       ${{ secrets.TENANT_ID }}
+        subscriptionId:                 ${{ secrets.SUBSCRIPTION_ID }}
+        deploymentPipelineClientId:     ${{ secrets.DEPLOYMENT_PIPELINE_CLIENT_ID }}
+        deploymentPipelineClientSecret: ${{ secrets.DEPLOYMENT_PIPELINE_CLIENT_SECRET }}
+        env:                            ${{ inputs.env }}
+        instance:                       ${{ inputs.instance }}
+    steps:
+    - name: Display Operating System Info
+      run:  echo "Deploy $env $instance environment."

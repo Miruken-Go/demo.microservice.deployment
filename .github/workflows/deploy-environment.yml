@@ -30,7 +30,9 @@ jobs:
         env:                            ${{ inputs.env }}
         instance:                       ${{ inputs.instance }}
     steps:
-    - name: secrets
-      run:  echo "Verify secrets are not logged $tenantId"
+    - name: pwd
+      run:  pwd
+    - name: ls
+      run:  ls -la
     - name: deployEnvironment
       run:  src/deployEnvironment.js 

@@ -5,14 +5,14 @@ on:
     inputs:
       env:
         type: choice
-        description: Env
+        description: Environment
         options: 
         - dev 
         - qa
         - staging
         - prod
       instance:
-        description: 'Unique instance of an environment'
+        description: 'Optional unique instance in an environment'
         default: ''
         required: false
         type: string
@@ -23,18 +23,14 @@ jobs:
     container:
       image: ghcr.io/miruken-go/demo.microservice.deployment:1686001494
       env:
-        tenantId:                       ${{ secrets.TENANT_ID }}
-        subscriptionId:                 ${{ secrets.SUBSCRIPTION_ID }}
-        deploymentPipelineClientId:     ${{ secrets.DEPLOYMENT_PIPELINE_CLIENT_ID }}
+        tenantId:                       ${{ variables.TENANT_ID }}
+        subscriptionId:                 ${{ variables.SUBSCRIPTION_ID }}
+        deploymentPipelineClientId:     ${{ variables.DEPLOYMENT_PIPELINE_CLIENT_ID }}
         deploymentPipelineClientSecret: ${{ secrets.DEPLOYMENT_PIPELINE_CLIENT_SECRET }}
         env:                            ${{ inputs.env }}
         instance:                       ${{ inputs.instance }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: pwd
-      run:  pwd
-    - name: ls
-      run:  ls -la
     - name: deployEnvironment
       run:  node ./src/deployEnvironment.js 

@@ -1,6 +1,6 @@
 name: Deploy Shared Environment 
 
-on: workflow_dispatchj
+on: workflow_dispatch
 
 jobs:
   containerized_job:

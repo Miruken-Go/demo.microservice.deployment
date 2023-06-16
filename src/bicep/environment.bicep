@@ -40,7 +40,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01'
 }
 
 resource containerApp 'Microsoft.App/containerApps@2022-03-01' ={
-  name: appName 
+  name: prefix
   location: location
   identity: {
     type: 'SystemAssigned'

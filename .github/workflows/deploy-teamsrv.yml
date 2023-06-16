@@ -25,12 +25,12 @@ jobs:
   deploy-teamsrv:
     runs-on: ubuntu-latest
     env:
-      tenantId:                       ${{ vars.TENANT_ID }}
-      deploymentPipelineClientId:     ${{ vars.DEPLOYMENT_PIPELINE_CLIENT_ID }}
-      deploymentPipelineClientSecret: ${{ secrets.DEPLOYMENT_PIPELINE_CLIENT_SECRET }}
-      env:                            ${{ inputs.env }}
-      instance:                       ${{ inputs.instance }}
-      tag:                            ${{ inputs.tag }}
+      TENANT_ID:                         ${{ vars.TENANT_ID }}
+      DEPLOYMENT_PIPELINE_CLIENT_ID:     ${{ vars.DEPLOYMENT_PIPELINE_CLIENT_ID }}
+      DEPLOYMENT_PIPELINE_CLIENT_SECRET: ${{ secrets.DEPLOYMENT_PIPELINE_CLIENT_SECRET }}
+      ENV:                               ${{ inputs.env }}
+      INSTANCE:                          ${{ inputs.instance }}
+      TAG:                               ${{ inputs.tag }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3

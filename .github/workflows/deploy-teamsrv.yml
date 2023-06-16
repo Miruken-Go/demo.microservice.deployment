@@ -34,5 +34,5 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: deployEnvironment
-      run:  ./createRevision.sh
+    - name: deploy-teamsrv
+      run:  ./deploy-teamsrv.sh

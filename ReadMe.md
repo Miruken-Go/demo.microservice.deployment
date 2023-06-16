@@ -29,6 +29,9 @@ Variables
 * TENANT_ID
 * SUBSCRIPTION_ID
 * DEPLOYMENT_PIPELINE_CLIENT_ID
+* WORKFLOW_GH_TOKEN
+
+`WORKFLOW_GH_TOKEN` should be a github personal access token that has permissions to edit workflows
 
 ### Run the "build-and-push-deployment-image" pipeline
 

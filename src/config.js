@@ -16,6 +16,8 @@ if (containerRepositoryName.length > 32)
 if (simplePrefix.length > 32)
     throw `Configuration Error - simplePrefix cannot be longer than 50 characters because of ACA naming restrictions: ${simplePrefix} [${simplePrefix.length}]`
 
+const imageName = `${containerRepositoryName}.azurecr.io/${appName}`
+
 const config = {
     workingDirectory: process.cwd(),
     nodeDirectory:    __dirname,
@@ -27,6 +29,7 @@ const config = {
     resourceGroup: `${prefix}-rg`,
     sharedResourceGroup: `${appName}-shared-rg`,
     containerRepositoryName,
+    imageName,
     location:      process.env.location || 'CentralUs',
     secrets:       {},
 

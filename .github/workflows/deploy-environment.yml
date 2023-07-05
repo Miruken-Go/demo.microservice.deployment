@@ -10,6 +10,7 @@ on:
         - dev 
         - qa
         - staging
+        - demo
         - prod
       instance:
         description: 'Optional unique instance in an environment'

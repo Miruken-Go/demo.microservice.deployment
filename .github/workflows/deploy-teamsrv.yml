@@ -14,6 +14,7 @@ on:
         - dev 
         - qa
         - staging
+        - demo
         - prod
       instance:
         description: 'Optional unique instance in an environment'
@@ -24,15 +25,17 @@ on:
 jobs:
   deploy-teamsrv:
     runs-on: ubuntu-latest
-    env:
-      TENANT_ID:                         ${{ vars.TENANT_ID }}
-      DEPLOYMENT_PIPELINE_CLIENT_ID:     ${{ vars.DEPLOYMENT_PIPELINE_CLIENT_ID }}
-      DEPLOYMENT_PIPELINE_CLIENT_SECRET: ${{ secrets.DEPLOYMENT_PIPELINE_CLIENT_SECRET }}
-      ENV:                               ${{ inputs.env }}
-      INSTANCE:                          ${{ inputs.instance }}
-      TAG:                               ${{ inputs.tag }}
+    container:
+      image: ghcr.io/miruken-go/demo.microservice.deployment:1686419359
+      env:
+        tenantId:                       ${{ vars.TENANT_ID }}
+        deploymentPipelineClientId:     ${{ vars.DEPLOYMENT_PIPELINE_CLIENT_ID }}
+        deploymentPipelineClientSecret: ${{ secrets.DEPLOYMENT_PIPELINE_CLIENT_SECRET }}
+        env:                            ${{ inputs.env }}
+        instance:                       ${{ inputs.instance }}
+        tag:                            ${{ inputs.tag }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: deploy-teamsrv
-      run:  ./deploy-teamsrv.sh
+      run:  node ./src/deployTeamsrv.js
